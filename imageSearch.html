@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMAGE SEARCH</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: yellow;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            width: 200px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .card img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .card img:hover {
+            transform: scale(1.05);
+        }
+
+        #button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: none;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="input" placeholder="Enter image name">
+            <button class="btn-primary" onclick="searchimgs()">Search</button>
+        </div>
+        <div class="row" id="imageContainer">
+            <!-- Images will be dynamically added here -->
+
+        </div>
+        <button id="button" onclick="load()">Load more</button>
+    </div>
+
+    <script>
+        let clientid = "NaMQSLnxiUrJH9Neu3hMWHueFEdm4Fzoh7g8Nhp5emY";
+        let input = document.getElementById("input");
+        let btn1 = document.getElementById("button");
+
+        let page = 1;
+
+        async function searchimgs() {
+            const keyword = input.value;
+
+            const url = `https://api.unsplash.com/search/photos?page=${page}&query=${keyword}&client_id=${clientid}`;
+
+
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const imageContainer = document.getElementById("imageContainer");
+            imageContainer.innerHTML = ''; // Clear previous images
+            const results = data.results;
+
+            results.forEach((result) => {
+                const card = document.createElement("div");
+                card.classList.add("card");
+
+                const image = document.createElement("img");
+                image.src = result.urls.small;
+
+                const imagelink = document.createElement("a");
+                imagelink.href = result.links.html;
+                imagelink.target = "_blank";
+                imagelink.appendChild(image);
+
+                card.appendChild(imagelink);
+                imageContainer.appendChild(card);
+
+                btn1.style.display = "block"
+            });
+
+        }
+        btn1.addEventListener("click", () => {
+            page++;
+            searchimgs();
+        })
+
+
+    </script>
+</body>
+
+</html>
